@@ -1,8 +1,16 @@
 <h2>Add New Post</h2>
 
 <div>
-  <textarea name="content" id="content" cols="50" rows="5"></textarea>
+  <textarea
+    [value]="newPost"
+    name="content"
+    id="content"
+    cols="50"
+    rows="5"
+  ></textarea>
 </div>
 <div>
   <button (click)="onAddPost()">Save Post</button>
 </div>
+
+<p>{{ newPost }}</p>

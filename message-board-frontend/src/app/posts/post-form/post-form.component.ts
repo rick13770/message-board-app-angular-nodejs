@@ -6,7 +6,9 @@ import { Component } from '@angular/core';
   styleUrls: ['./post-form.component.css'],
 })
 export class PostFormComponent {
+  newPost = 'DEFAULT CONTENT';
+
   onAddPost() {
-    console.log('Saved post');
+    this.newPost = 'Nulla porttitor accumsan tincidunt.';
   }
 }
