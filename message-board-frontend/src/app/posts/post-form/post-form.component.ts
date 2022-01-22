@@ -5,4 +5,8 @@ import { Component } from '@angular/core';
   templateUrl: './post-form.component.html',
   styleUrls: ['./post-form.component.css'],
 })
-export class PostFormComponent {}
+export class PostFormComponent {
+  onAddPost() {
+    console.log('Saved post');
+  }
+}
