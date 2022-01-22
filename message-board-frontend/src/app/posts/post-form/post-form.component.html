@@ -1,16 +1,21 @@
 <h2>Add New Post</h2>
 
-<div>
-  <textarea
-    [(ngModel)]="enteredContent"
-    name="content"
-    id="content"
-    cols="50"
-    rows="5"
-  ></textarea>
-</div>
-<div>
-  <button (click)="onAddPost()">Save Post</button>
-</div>
+<mat-card>
+  <mat-form-field appearance="fill">
+    <mat-label>Content</mat-label>
+    <textarea
+      [(ngModel)]="enteredContent"
+      matInput
+      name="content"
+      id="content"
+      cols="50"
+      rows="5"
+      placeholder="Enter post content"
+    ></textarea>
+  </mat-form-field>
+  <button (click)="onAddPost()" mat-raised-button color="accent">
+    Save Post
+  </button>
+</mat-card>
 
 <p>{{ postContent }}</p>
