@@ -1,5 +1,6 @@
 mat-card {
   width: 80%;
+  max-width: 960px;
   margin: auto;
 }
 
