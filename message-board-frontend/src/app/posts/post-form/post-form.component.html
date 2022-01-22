@@ -1,28 +1,40 @@
 <mat-card>
   <h2 class="mat-title">Add New Post</h2>
 
-  <mat-form-field appearance="fill">
-    <mat-label>Title</mat-label>
-    <input
-      [(ngModel)]="enteredTitle"
-      matInput
-      placeholder="Enter post title"
-      autocomplete="off"
-    />
-  </mat-form-field>
-  <mat-form-field appearance="fill">
-    <mat-label>Content</mat-label>
-    <textarea
-      [(ngModel)]="enteredContent"
-      matInput
-      name="content"
-      id="content"
-      cols="50"
-      rows="5"
-      placeholder="Enter post content"
-    ></textarea>
-  </mat-form-field>
-  <button (click)="onAddPost()" mat-raised-button color="accent">
-    Save Post
-  </button>
+  <form #postForm="ngForm" (submit)="onAddPost(postForm)">
+    <mat-form-field appearance="fill">
+      <mat-label>Title</mat-label>
+      <input
+        #title="ngModel"
+        ngModel
+        matInput
+        name="title"
+        id="title"
+        placeholder="Enter post title"
+        autocomplete="off"
+        required
+        minlength="3"
+        maxlength="100"
+      />
+      <mat-error *ngIf="title.invalid">Title is required</mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Content</mat-label>
+      <textarea
+        #content="ngModel"
+        ngModel
+        matInput
+        name="content"
+        id="content"
+        cols="50"
+        rows="5"
+        placeholder="Enter post content"
+        required
+        minlength="10"
+        maxlength="1000"
+      ></textarea>
+      <mat-error *ngIf="content.invalid">Content is required</mat-error>
+    </mat-form-field>
+    <button mat-raised-button color="accent" type="submit">Save Post</button>
+  </form>
 </mat-card>
