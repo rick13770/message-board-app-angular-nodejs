@@ -2,7 +2,7 @@
 
 <div>
   <textarea
-    [value]="newPost"
+    [(ngModel)]="enteredContent"
     name="content"
     id="content"
     cols="50"
@@ -13,4 +13,4 @@
   <button (click)="onAddPost()">Save Post</button>
 </div>
 
-<p>{{ newPost }}</p>
+<p>{{ postContent }}</p>

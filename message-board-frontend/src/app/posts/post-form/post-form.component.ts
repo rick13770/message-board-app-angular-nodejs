@@ -6,9 +6,11 @@ import { Component } from '@angular/core';
   styleUrls: ['./post-form.component.css'],
 })
 export class PostFormComponent {
-  newPost = 'DEFAULT CONTENT';
+  enteredContent = '';
+  postContent = '';
 
   onAddPost() {
-    this.newPost = 'Nulla porttitor accumsan tincidunt.';
+    this.postContent = this.enteredContent;
+    this.enteredContent = '';
   }
 }
