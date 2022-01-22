@@ -1,3 +1,7 @@
 main {
-  margin-top: 2rem;
+  width: 80%;
+  max-width: 960px;
+  margin-top: 1.5rem;
+  margin-left: auto;
+  margin-right: auto;
 }
