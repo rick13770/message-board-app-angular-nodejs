@@ -17,6 +17,7 @@ export class PostFormComponent {
     }
 
     const post: Post = {
+      id: Date.now(),
       title: postForm.value.title,
       content: postForm.value.content,
     };

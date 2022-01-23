@@ -1,37 +1,34 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { Post } from './post.model';
 
-const DUMMY_POSTS: Post[] = [
-  {
-    title: 'First Post',
-    content: 'This is the first post',
-  },
-  {
-    title: 'Second Post',
-    content: 'This is the second post',
-  },
-  {
-    title: 'Third Post',
-    content: 'This is the third post',
-  },
-];
+interface AllPostsResponse {
+  message: string;
+  posts: Post[];
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class PostService {
-  private posts: Post[] = DUMMY_POSTS;
-  private postsSubject = new BehaviorSubject<Post[]>(this.posts);
+  private posts: Post[] = [];
+  private postsSubject = new Subject<Post[]>();
 
-  constructor() {}
+  constructor(private http: HttpClient) {}
 
   getPostsObservable() {
     return this.postsSubject.asObservable();
   }
 
   fetchAllPosts() {
-    return [...this.posts];
+    this.http
+      .get<AllPostsResponse>('http://localhost:3000/api/posts')
+      .subscribe(({ posts }) => {
+        this.posts = posts;
+      });
+
+    this.postsSubject.next([...this.posts]);
   }
 
   createPost(post: Post) {
