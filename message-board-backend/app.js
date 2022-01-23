@@ -1,6 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
+const Post = require('./models/post');
+
 const app = express();
 
 app.use(express.json());
@@ -47,9 +49,10 @@ app.get('/api/posts', (req, res) => {
 });
 
 app.post('/api/posts', (req, res) => {
-  const post = req.body;
-
-  DUMMY_POSTS.push(post);
+  const post = new Post({
+    title: req.body.title,
+    content: req.body.content,
+  });
 
   res.status(201).json({
     message: 'Post added successfully',
