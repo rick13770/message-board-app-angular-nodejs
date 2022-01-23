@@ -26,9 +26,9 @@ export class PostService {
       .get<AllPostsResponse>('http://localhost:3000/api/posts')
       .subscribe(({ posts }) => {
         this.posts = posts;
-      });
 
-    this.postsSubject.next([...this.posts]);
+        this.postsSubject.next([...this.posts]);
+      });
   }
 
   createPost(post: Post) {
