@@ -4,6 +4,11 @@ import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Post } from './post.model';
 
+interface NewPost {
+  title: string;
+  content: string;
+}
+
 interface PostDTO {
   _id: string;
   title: string;
@@ -31,17 +36,13 @@ export class PostService {
 
   constructor(private http: HttpClient) {}
 
-  fetchAllPosts() {
+  fetchAllPosts(): void {
     this.http
       .get<AllPostsResponse>('http://localhost:3000/api/posts')
       .pipe(
         map((response) => {
           return response.posts.map((post) => {
-            return {
-              id: post._id,
-              title: post.title,
-              content: post.content,
-            };
+            return this.transformPost(post);
           });
         })
       )
@@ -51,17 +52,30 @@ export class PostService {
       });
   }
 
-  createPost(post: Post) {
+  createPost(newPost: NewPost): void {
     this.http
-      .post<SinglePostResponse>('http://localhost:3000/api/posts', post)
+      .post<SinglePostResponse>('http://localhost:3000/api/posts', newPost)
       .subscribe((response) => {
-        const savedPost = {
-          id: response.post._id,
-          title: response.post.title,
-          content: response.post.content,
-        };
+        const savedPost = this.transformPost(response.post);
         this.posts.unshift(savedPost);
         this.postsSubject.next([...this.posts]);
       });
+  }
+
+  deletePost(postId: string): void {
+    this.http
+      .delete(`http://localhost:3000/api/posts/${postId}`)
+      .subscribe(() => {
+        this.posts = this.posts.filter((post) => post.id !== postId);
+        this.postsSubject.next([...this.posts]);
+      });
+  }
+
+  private transformPost(post: PostDTO): Post {
+    return {
+      id: post._id,
+      title: post.title,
+      content: post.content,
+    };
   }
 }

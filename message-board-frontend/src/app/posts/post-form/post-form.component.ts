@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { Post } from '../post.model';
 import { PostService } from '../post.service';
 
 @Component({
@@ -16,7 +15,7 @@ export class PostFormComponent {
       return;
     }
 
-    const post: Post = {
+    const post = {
       title: postForm.value.title,
       content: postForm.value.content,
     };
