@@ -14,6 +14,11 @@ const routes: Routes = [
     component: PostFormComponent,
     pathMatch: 'full',
   },
+  {
+    path: 'edit-post/:postId',
+    component: PostFormComponent,
+    pathMatch: 'full',
+  },
 ];
 
 @NgModule({

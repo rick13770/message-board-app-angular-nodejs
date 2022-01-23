@@ -5,7 +5,9 @@
     </mat-expansion-panel-header>
     <p>{{ post.content }}</p>
     <mat-action-row>
-      <button mat-button color="primary">EDIT</button>
+      <a [routerLink]="['edit-post', post.id]" mat-button color="primary"
+        >EDIT</a
+      >
       <button (click)="onDelete(post.id)" mat-button color="warn">
         DELETE
       </button>

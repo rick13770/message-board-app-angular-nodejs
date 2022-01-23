@@ -31,8 +31,10 @@ interface SinglePostResponse {
 export class PostService {
   private posts: Post[] = [];
   private postsSubject = new Subject<Post[]>();
+  private selectedPostSubject = new Subject<Post>();
 
   readonly posts$ = this.postsSubject.asObservable();
+  readonly selectedPost$ = this.selectedPostSubject.asObservable();
 
   constructor(private http: HttpClient) {}
 
@@ -49,6 +51,15 @@ export class PostService {
       .subscribe((posts) => {
         this.posts = posts;
         this.postsSubject.next([...this.posts]);
+      });
+  }
+
+  fetchPost(postId: string): void {
+    this.http
+      .get<SinglePostResponse>(`http://localhost:3000/api/posts/${postId}`)
+      .subscribe((response) => {
+        const post = this.transformPost(response.post);
+        this.selectedPostSubject.next(post);
       });
   }
 

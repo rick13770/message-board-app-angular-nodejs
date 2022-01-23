@@ -54,6 +54,19 @@ app.get('/api/posts', async (req, res) => {
   });
 });
 
+app.get('/api/posts/:id', async (req, res) => {
+  const post = await Post.findById(req.params.id);
+
+  if (!post) {
+    return res.status(404).json({ message: 'Post not found' });
+  }
+
+  res.status(200).json({
+    message: 'Successfully retrieved post',
+    post: post,
+  });
+});
+
 app.post('/api/posts', async (req, res) => {
   const post = new Post({
     title: req.body.title,
