@@ -1,8 +1,18 @@
 <mat-toolbar color="primary">
-  <span> <a routerLink="/">MessageBoard</a></span>
+  <span><a routerLink="/">MessageBoard</a></span>
+  <span class="spacer"></span>
   <ul>
     <li>
-      <a routerLink="/create-post">Add New Post</a>
+      <a
+        routerLink="/"
+        routerLinkActive="mat-accent"
+        [routerLinkActiveOptions]="{ exact: true }"
+        mat-button
+        >Home</a
+      >
+      <a routerLink="/create-post" routerLinkActive="mat-accent" mat-button
+        >Add New Post</a
+      >
     </li>
   </ul>
 </mat-toolbar>
