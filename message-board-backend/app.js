@@ -88,6 +88,36 @@ app.post('/api/posts', async (req, res) => {
   }
 });
 
+app.patch('/api/posts/:id', async (req, res) => {
+  const post = await Post.findById(req.params.id);
+
+  if (!post) {
+    return res.status(404).json({ message: 'Post not found' });
+  }
+
+  if (req.body.title) {
+    post.title = req.body.title;
+  }
+
+  if (req.body.content) {
+    post.content = req.body.content;
+  }
+
+  try {
+    await post.save();
+
+    res.status(200).json({
+      message: 'Post updated successfully',
+      post: post,
+    });
+  } catch (error) {
+    res.status(400).json({
+      message: 'Post not updated',
+      error: error.message,
+    });
+  }
+});
+
 app.delete('/api/posts/:id', async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);

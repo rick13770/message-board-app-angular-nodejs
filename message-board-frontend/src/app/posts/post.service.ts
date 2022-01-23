@@ -9,10 +9,8 @@ interface NewPost {
   content: string;
 }
 
-interface PostDTO {
+interface PostDTO extends NewPost {
   _id: string;
-  title: string;
-  content: string;
 }
 
 interface AllPostsResponse {
@@ -69,6 +67,22 @@ export class PostService {
       .subscribe((response) => {
         const savedPost = this.transformPost(response.post);
         this.posts.unshift(savedPost);
+        this.postsSubject.next([...this.posts]);
+      });
+  }
+
+  updatePost(postId: string, editedPost: PostDTO): void {
+    this.http
+      .patch<SinglePostResponse>(
+        `http://localhost:3000/api/posts/${postId}`,
+        editedPost
+      )
+      .subscribe((response) => {
+        const updatedPost = this.transformPost(response.post);
+        const postIndex = this.posts.findIndex(
+          (post) => post.id === updatedPost.id
+        );
+        this.posts[postIndex] = updatedPost;
         this.postsSubject.next([...this.posts]);
       });
   }
