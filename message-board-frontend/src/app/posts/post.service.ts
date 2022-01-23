@@ -20,11 +20,9 @@ export class PostService {
   private posts: Post[] = [];
   private postsSubject = new Subject<Post[]>();
 
-  constructor(private http: HttpClient) {}
+  readonly posts$ = this.postsSubject.asObservable();
 
-  getPostsObservable() {
-    return this.postsSubject.asObservable();
-  }
+  constructor(private http: HttpClient) {}
 
   fetchAllPosts() {
     this.http
