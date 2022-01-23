@@ -45,24 +45,6 @@ app.use((req, res, next) => {
   next();
 });
 
-const DUMMY_POSTS = [
-  {
-    id: 123,
-    title: 'First Post',
-    content: 'This is the first post',
-  },
-  {
-    id: 234,
-    title: 'Second Post',
-    content: 'This is the second post',
-  },
-  {
-    id: 345,
-    title: 'Third Post',
-    content: 'This is the third post',
-  },
-];
-
 app.get('/api/posts', async (req, res) => {
   const posts = await Post.find().sort({ createdAt: 'desc' }).limit(10);
 
