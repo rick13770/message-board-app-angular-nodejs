@@ -8,6 +8,11 @@ interface AllPostsResponse {
   posts: Post[];
 }
 
+interface SinglePostResponse {
+  message: string;
+  post: Post;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -24,17 +29,17 @@ export class PostService {
   fetchAllPosts() {
     this.http
       .get<AllPostsResponse>('http://localhost:3000/api/posts')
-      .subscribe(({ posts }) => {
-        this.posts = posts;
+      .subscribe((response) => {
+        this.posts = response.posts;
         this.postsSubject.next([...this.posts]);
       });
   }
 
   createPost(post: Post) {
     this.http
-      .post<Post>('http://localhost:3000/api/posts', post)
-      .subscribe((newPost) => {
-        this.posts.push(newPost);
+      .post<SinglePostResponse>('http://localhost:3000/api/posts', post)
+      .subscribe((response) => {
+        this.posts.push(response.post);
         this.postsSubject.next([...this.posts]);
       });
   }
