@@ -31,7 +31,7 @@ export class PostService {
   private postsSubject = new Subject<Post[]>();
   private selectedPostSubject = new Subject<Post>();
 
-  readonly posts$ = this.postsSubject.asObservable();
+  readonly allPosts$ = this.postsSubject.asObservable();
   readonly selectedPost$ = this.selectedPostSubject.asObservable();
 
   constructor(private http: HttpClient) {}
