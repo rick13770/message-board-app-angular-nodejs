@@ -1,22 +1,25 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 
 const app = express();
+
+app.use(express.json());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader(
-    'Access-Control-Allow-Header',
-    'Origin, X-Requested-With, Content-Type, Accept'
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept, Authorization'
   );
   res.setHeader(
     'Access-Control-Allow-Methods',
-    'GET, POST, PATCH, DELETE, OPTIONS'
+    'GET, POST, PATCH, PUT, DELETE, OPTIONS'
   );
 
   next();
 });
-
-app.use(express.json());
 
 const DUMMY_POSTS = [
   {
@@ -40,6 +43,17 @@ app.get('/api/posts', (req, res) => {
   res.status(200).json({
     message: 'Successfully retrieved posts',
     posts: DUMMY_POSTS,
+  });
+});
+
+app.post('/api/posts', (req, res) => {
+  const post = req.body;
+
+  DUMMY_POSTS.push(post);
+
+  res.status(201).json({
+    message: 'Post added successfully',
+    post: post,
   });
 });
 
