@@ -4,6 +4,8 @@ import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Post } from './post.model';
 
+const POSTS_URL = 'http://localhost:3000/api/posts';
+
 interface NewPost {
   title: string;
   content: string;
@@ -38,7 +40,7 @@ export class PostService {
 
   fetchAllPosts(): void {
     this.http
-      .get<AllPostsResponse>('http://localhost:3000/api/posts')
+      .get<AllPostsResponse>(POSTS_URL)
       .pipe(
         map((response) => {
           return response.posts.map((post) => {
@@ -54,7 +56,7 @@ export class PostService {
 
   fetchPost(postId: string): void {
     this.http
-      .get<SinglePostResponse>(`http://localhost:3000/api/posts/${postId}`)
+      .get<SinglePostResponse>(`${POSTS_URL}/${postId}`)
       .subscribe((response) => {
         const post = this.transformPost(response.post);
         this.selectedPostSubject.next(post);
@@ -63,7 +65,7 @@ export class PostService {
 
   createPost(newPost: NewPost): void {
     this.http
-      .post<SinglePostResponse>('http://localhost:3000/api/posts', newPost)
+      .post<SinglePostResponse>(POSTS_URL, newPost)
       .subscribe((response) => {
         const savedPost = this.transformPost(response.post);
         this.posts.unshift(savedPost);
@@ -73,10 +75,7 @@ export class PostService {
 
   updatePost(postId: string, editedPost: PostDTO): void {
     this.http
-      .patch<SinglePostResponse>(
-        `http://localhost:3000/api/posts/${postId}`,
-        editedPost
-      )
+      .patch<SinglePostResponse>(`${POSTS_URL}/${postId}`, editedPost)
       .subscribe((response) => {
         const updatedPost = this.transformPost(response.post);
         const postIndex = this.posts.findIndex(
@@ -88,12 +87,10 @@ export class PostService {
   }
 
   deletePost(postId: string): void {
-    this.http
-      .delete(`http://localhost:3000/api/posts/${postId}`)
-      .subscribe(() => {
-        this.posts = this.posts.filter((post) => post.id !== postId);
-        this.postsSubject.next([...this.posts]);
-      });
+    this.http.delete(`${POSTS_URL}/${postId}`).subscribe(() => {
+      this.posts = this.posts.filter((post) => post.id !== postId);
+      this.postsSubject.next([...this.posts]);
+    });
   }
 
   private transformPost(post: PostDTO): Post {
