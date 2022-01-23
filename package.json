@@ -1,0 +1,26 @@
+{
+  "name": "message-board-app-angular-nodejs",
+  "version": "0.3.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/elvan/message-board-app-angular-nodejs.git"
+  },
+  "keywords": [],
+  "author": "Elvan Hidayat <elvanhd@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/elvan/message-board-app-angular-nodejs/issues"
+  },
+  "homepage": "https://github.com/elvan/message-board-app-angular-nodejs#readme",
+  "devDependencies": {
+    "@types/node": "^16.11.21",
+    "nodemon": "^2.0.15"
+  }
+}
