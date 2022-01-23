@@ -20,7 +20,11 @@
   },
   "homepage": "https://github.com/elvan/message-board-app-angular-nodejs#readme",
   "devDependencies": {
+    "@types/express": "^4.17.13",
     "@types/node": "^16.11.21",
     "nodemon": "^2.0.15"
+  },
+  "dependencies": {
+    "express": "^4.17.2"
   }
 }
