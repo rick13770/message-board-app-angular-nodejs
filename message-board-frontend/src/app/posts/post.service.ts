@@ -37,7 +37,7 @@ export class PostService {
     this.http
       .post<SinglePostResponse>('http://localhost:3000/api/posts', post)
       .subscribe((response) => {
-        this.posts.push(response.post);
+        this.posts.unshift(response.post);
         this.postsSubject.next([...this.posts]);
       });
   }

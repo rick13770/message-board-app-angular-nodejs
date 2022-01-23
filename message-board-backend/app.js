@@ -63,23 +63,34 @@ const DUMMY_POSTS = [
   },
 ];
 
-app.get('/api/posts', (req, res) => {
+app.get('/api/posts', async (req, res) => {
+  const posts = await Post.find().sort({ createdAt: 'desc' }).limit(10);
+
   res.status(200).json({
     message: 'Successfully retrieved posts',
-    posts: DUMMY_POSTS,
+    posts: posts,
   });
 });
 
-app.post('/api/posts', (req, res) => {
+app.post('/api/posts', async (req, res) => {
   const post = new Post({
     title: req.body.title,
     content: req.body.content,
   });
 
-  res.status(201).json({
-    message: 'Post added successfully',
-    post: post,
-  });
+  try {
+    await post.save();
+
+    res.status(201).json({
+      message: 'Post added successfully',
+      post: post,
+    });
+  } catch (error) {
+    res.status(400).json({
+      message: 'Post not added',
+      error: error.message,
+    });
+  }
 });
 
 module.exports = app;

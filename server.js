@@ -1,6 +1,6 @@
 const app = require('./message-board-backend/app');
 
-const debug = require('debug')('node-angular');
+const debug = require('debug')('message-board-app-angular-nodejs');
 const http = require('http');
 
 const normalizePort = (val) => {
