@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 
-const Post = require('./models/post');
+const postRouter = require('./routers/postRouter');
 
 dotenv.config();
 
@@ -45,100 +45,6 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get('/api/posts', async (req, res) => {
-  const posts = await Post.find().sort({ createdAt: 'desc' }).limit(10);
-
-  res.status(200).json({
-    message: 'Successfully retrieved posts',
-    posts: posts,
-  });
-});
-
-app.get('/api/posts/:id', async (req, res) => {
-  const post = await Post.findById(req.params.id);
-
-  if (!post) {
-    return res.status(404).json({ message: 'Post not found' });
-  }
-
-  res.status(200).json({
-    message: 'Successfully retrieved post',
-    post: post,
-  });
-});
-
-app.post('/api/posts', async (req, res) => {
-  const post = new Post({
-    title: req.body.title,
-    content: req.body.content,
-  });
-
-  try {
-    await post.save();
-
-    res.status(201).json({
-      message: 'Post added successfully',
-      post: post,
-    });
-  } catch (error) {
-    res.status(400).json({
-      message: 'Post not added',
-      error: error.message,
-    });
-  }
-});
-
-app.patch('/api/posts/:id', async (req, res) => {
-  const post = await Post.findById(req.params.id);
-
-  if (!post) {
-    return res.status(404).json({ message: 'Post not found' });
-  }
-
-  if (req.body.title) {
-    post.title = req.body.title;
-  }
-
-  if (req.body.content) {
-    post.content = req.body.content;
-  }
-
-  try {
-    await post.save();
-
-    res.status(200).json({
-      message: 'Post updated successfully',
-      post: post,
-    });
-  } catch (error) {
-    res.status(400).json({
-      message: 'Post not updated',
-      error: error.message,
-    });
-  }
-});
-
-app.delete('/api/posts/:id', async (req, res) => {
-  try {
-    const post = await Post.findById(req.params.id);
-
-    if (!post) {
-      return res.status(404).json({
-        message: 'Post not found',
-      });
-    }
-
-    await post.delete();
-
-    res.status(200).json({
-      message: 'Post deleted successfully',
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: 'Post not deleted',
-      error: error.message,
-    });
-  }
-});
+app.use('/api/posts', postRouter);
 
 module.exports = app;
