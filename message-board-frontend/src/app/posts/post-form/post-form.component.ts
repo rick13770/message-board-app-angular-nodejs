@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Post } from '../post.model';
 import { PostService } from '../post.service';
@@ -11,18 +11,19 @@ import { PostService } from '../post.service';
   styleUrls: ['./post-form.component.css'],
 })
 export class PostFormComponent implements OnInit {
+  pageTitle = 'Add Post';
+  mode: 'add' | 'edit' = 'add';
+
   post?: Post;
   postId: string = '';
 
-  mode: 'add' | 'edit' = 'add';
-  pageTitle = 'Add Post';
-
   loading = false;
-  loadingSubscription = new Subscription();
+  postSubscription = new Subscription();
 
   constructor(
     private postService: PostService,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -32,24 +33,21 @@ export class PostFormComponent implements OnInit {
         this.mode = 'edit';
         this.pageTitle = 'Edit Post';
 
-        this.postService.fetchPost(this.postId);
-        this.postService.selectedPost$.subscribe((post) => {
-          this.post = post;
-        });
+        this.loading = true;
+        this.postSubscription = this.postService
+          .fetchPost(this.postId)
+          .subscribe((post) => {
+            this.post = post;
+            this.loading = false;
+          });
       } else {
         this.mode = 'add';
       }
     });
-
-    this.loadingSubscription = this.postService.loading$.subscribe(
-      (loading: boolean) => {
-        this.loading = loading;
-      }
-    );
   }
 
   ngOnDestroy(): void {
-    this.loadingSubscription.unsubscribe();
+    this.postSubscription.unsubscribe();
   }
 
   onSubmit(postForm: NgForm) {
@@ -57,17 +55,23 @@ export class PostFormComponent implements OnInit {
       return;
     }
 
+    this.loading = true;
+    let action = null;
+
     if (this.mode === 'add') {
       const post = {
         title: postForm.value.title,
         content: postForm.value.content,
       };
 
-      this.postService.createPost(post);
+      action = this.postService.createPost(post);
     } else {
-      this.postService.updatePost(this.postId, postForm.value);
+      action = this.postService.updatePost(this.postId, postForm.value);
     }
 
-    // postForm.resetForm();
+    action?.subscribe((_response) => {
+      this.loading = false;
+      this.router.navigateByUrl('/');
+    });
   }
 }
