@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { Post } from '../post.model';
 import { PostService } from '../post.service';
 
@@ -16,10 +17,12 @@ export class PostFormComponent implements OnInit {
   mode: 'add' | 'edit' = 'add';
   pageTitle = 'Add Post';
 
+  loading = false;
+  loadingSubscription = new Subscription();
+
   constructor(
     private postService: PostService,
-    private activatedRoute: ActivatedRoute,
-    private router: Router
+    private activatedRoute: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
@@ -37,6 +40,16 @@ export class PostFormComponent implements OnInit {
         this.mode = 'add';
       }
     });
+
+    this.loadingSubscription = this.postService.loading$.subscribe(
+      (loading: boolean) => {
+        this.loading = loading;
+      }
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.loadingSubscription.unsubscribe();
   }
 
   onSubmit(postForm: NgForm) {
@@ -55,7 +68,6 @@ export class PostFormComponent implements OnInit {
       this.postService.updatePost(this.postId, postForm.value);
     }
 
-    postForm.resetForm();
-    this.router.navigateByUrl('/');
+    // postForm.resetForm();
   }
 }

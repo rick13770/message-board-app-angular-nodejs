@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Router } from '@angular/router';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Post } from './post.model';
 
@@ -32,13 +33,16 @@ export class PostService {
   private posts: Post[] = [];
   private postsSubject = new Subject<Post[]>();
   private selectedPostSubject = new Subject<Post>();
+  private loadingSubject = new BehaviorSubject<boolean>(false);
 
   readonly allPosts$ = this.postsSubject.asObservable();
   readonly selectedPost$ = this.selectedPostSubject.asObservable();
+  readonly loading$ = this.loadingSubject.asObservable();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
   fetchAllPosts(): void {
+    this.loadingSubject.next(true);
     this.http
       .get<AllPostsResponse>(POSTS_URL)
       .pipe(
@@ -51,29 +55,36 @@ export class PostService {
       .subscribe((posts) => {
         this.posts = posts;
         this.postsSubject.next([...this.posts]);
+        this.loadingSubject.next(false);
       });
   }
 
   fetchPost(postId: string): void {
+    this.loadingSubject.next(true);
     this.http
       .get<SinglePostResponse>(`${POSTS_URL}/${postId}`)
       .subscribe((response) => {
         const post = this.transformPost(response.post);
         this.selectedPostSubject.next(post);
+        this.loadingSubject.next(false);
       });
   }
 
   createPost(newPost: NewPost): void {
+    this.loadingSubject.next(true);
     this.http
       .post<SinglePostResponse>(POSTS_URL, newPost)
       .subscribe((response) => {
         const savedPost = this.transformPost(response.post);
         this.posts.unshift(savedPost);
         this.postsSubject.next([...this.posts]);
+        this.loadingSubject.next(false);
+        this.router.navigateByUrl('/');
       });
   }
 
   updatePost(postId: string, editedPost: PostDTO): void {
+    this.loadingSubject.next(true);
     this.http
       .patch<SinglePostResponse>(`${POSTS_URL}/${postId}`, editedPost)
       .subscribe((response) => {
@@ -83,13 +94,18 @@ export class PostService {
         );
         this.posts[postIndex] = updatedPost;
         this.postsSubject.next([...this.posts]);
+        this.loadingSubject.next(false);
+        this.router.navigateByUrl('/');
       });
   }
 
   deletePost(postId: string): void {
+    this.loadingSubject.next(true);
     this.http.delete(`${POSTS_URL}/${postId}`).subscribe(() => {
       this.posts = this.posts.filter((post) => post.id !== postId);
       this.postsSubject.next([...this.posts]);
+      this.loadingSubject.next(false);
+      this.router.navigateByUrl('/');
     });
   }
 

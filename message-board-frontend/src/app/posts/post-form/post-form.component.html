@@ -15,6 +15,7 @@
         required
         minlength="3"
         maxlength="100"
+        [disabled]="loading"
       />
       <mat-error *ngIf="title.invalid">Title is required</mat-error>
     </mat-form-field>
@@ -32,9 +33,12 @@
         required
         minlength="10"
         maxlength="1000"
+        [disabled]="loading"
       ></textarea>
       <mat-error *ngIf="content.invalid">Content is required</mat-error>
     </mat-form-field>
-    <button mat-raised-button color="accent" type="submit">Save Post</button>
+    <button mat-raised-button color="accent" type="submit" [disabled]="loading">
+      Save Post
+    </button>
   </form>
 </mat-card>
