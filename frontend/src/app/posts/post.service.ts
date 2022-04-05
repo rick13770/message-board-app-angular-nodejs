@@ -2,9 +2,10 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 import { Post } from './post';
 
-const POSTS_URL = 'http://localhost:3000/api/posts';
+const POSTS_URL = environment.apiUrl + '/posts';
 
 interface PostData {
   title: string;
