@@ -32,16 +32,16 @@ export class PostFormComponent implements OnInit {
     this.postForm = new FormGroup({
       title: new FormControl({ value: '', disabled: this.loading }, [
         Validators.required,
-        Validators.minLength(3),
-        Validators.maxLength(100),
+        Validators.minLength(10),
+        Validators.maxLength(200),
       ]),
       imageUrl: new FormControl({ value: '', disabled: this.loading }, [
         Validators.required,
       ]),
       content: new FormControl({ value: '', disabled: this.loading }, [
         Validators.required,
-        Validators.minLength(3),
-        Validators.maxLength(1000),
+        Validators.minLength(10),
+        Validators.maxLength(2000),
       ]),
     });
 
