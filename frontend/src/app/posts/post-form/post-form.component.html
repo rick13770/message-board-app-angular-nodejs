@@ -1,56 +1,41 @@
 <mat-card>
   <h2 class="mat-title">{{ pageTitle }}</h2>
 
-  <form #postForm="ngForm" (submit)="onSubmit(postForm)">
+  <form *ngIf="postForm" [formGroup]="postForm" (submit)="onSubmit()">
     <mat-form-field appearance="fill">
       <mat-label>Title</mat-label>
-      <input
-        #title="ngModel"
-        [ngModel]="post?.title"
-        matInput
-        name="title"
-        id="title"
-        autocomplete="off"
-        required
-        minlength="3"
-        maxlength="100"
-        [disabled]="loading"
-      />
-      <mat-error *ngIf="title.invalid">Title is required</mat-error>
+      <input formControlName="title" matInput id="title" autocomplete="off" />
+      <mat-error *ngIf="postForm.get('title')?.invalid"
+        >Title is required</mat-error
+      >
     </mat-form-field>
 
     <mat-form-field appearance="fill">
       <mat-label>Image URL</mat-label>
       <input
-        #imageUrl="ngModel"
-        [ngModel]="post?.imageUrl"
+        formControlName="imageUrl"
         matInput
-        name="imageUrl"
         id="imageUrl"
         type="url"
         autocomplete="off"
-        required
-        [disabled]="loading"
       />
-      <mat-error *ngIf="imageUrl.invalid">Image URL is required</mat-error>
+      <mat-error *ngIf="postForm.get('imageUrl')?.invalid"
+        >Image URL is required</mat-error
+      >
     </mat-form-field>
 
     <mat-form-field appearance="fill">
       <mat-label>Content</mat-label>
       <textarea
-        #content="ngModel"
-        [ngModel]="post?.content"
+        formControlName="content"
         matInput
-        name="content"
         id="content"
         cols="50"
         rows="5"
-        required
-        minlength="10"
-        maxlength="1000"
-        [disabled]="loading"
       ></textarea>
-      <mat-error *ngIf="content.invalid">Content is required</mat-error>
+      <mat-error *ngIf="postForm.get('content')?.invalid"
+        >Content is required</mat-error
+      >
     </mat-form-field>
 
     <button mat-raised-button color="accent" type="submit" [disabled]="loading">

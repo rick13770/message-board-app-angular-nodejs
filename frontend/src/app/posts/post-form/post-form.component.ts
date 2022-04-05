@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Post } from '../post';
@@ -20,6 +20,8 @@ export class PostFormComponent implements OnInit {
   loading = false;
   postSub?: Subscription;
 
+  postForm?: FormGroup;
+
   constructor(
     private postService: PostService,
     private activatedRoute: ActivatedRoute,
@@ -27,6 +29,22 @@ export class PostFormComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.postForm = new FormGroup({
+      title: new FormControl({ value: '', disabled: this.loading }, [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(100),
+      ]),
+      imageUrl: new FormControl({ value: '', disabled: this.loading }, [
+        Validators.required,
+      ]),
+      content: new FormControl({ value: '', disabled: this.loading }, [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(1000),
+      ]),
+    });
+
     this.activatedRoute.params.subscribe((params) => {
       if (params.postId) {
         this.id = params.postId;
@@ -38,6 +56,12 @@ export class PostFormComponent implements OnInit {
           this.post = post;
           this.loading = false;
         });
+
+        this.postForm?.setValue({
+          title: this.post?.title,
+          imageUrl: this.post?.imageUrl,
+          content: this.post?.content,
+        });
       } else {
         this.mode = 'add';
       }
@@ -48,8 +72,8 @@ export class PostFormComponent implements OnInit {
     this.postSub?.unsubscribe();
   }
 
-  onSubmit(postForm: NgForm) {
-    if (postForm.invalid) {
+  onSubmit() {
+    if (this.postForm?.invalid) {
       return;
     }
 
@@ -58,15 +82,17 @@ export class PostFormComponent implements OnInit {
 
     if (this.mode === 'add') {
       const post = {
-        title: postForm.value.title,
-        imageUrl: postForm.value.imageUrl,
-        content: postForm.value.content,
+        title: this.postForm?.value.title,
+        imageUrl: this.postForm?.value.imageUrl,
+        content: this.postForm?.value.content,
       };
 
       action = this.postService.create(post);
     } else {
-      action = this.postService.update(this.id, postForm.value);
+      action = this.postService.update(this.id, this.postForm?.value);
     }
+
+    this.postForm?.reset();
 
     action?.subscribe((_response) => {
       this.loading = false;
