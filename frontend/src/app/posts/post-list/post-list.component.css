@@ -1,3 +1,12 @@
+:host {
+  display: block;
+  margin-top: 1rem;
+}
+
+p {
+  font-size: 1.1rem;
+}
+
 .info-text {
   text-align: center;
 }
@@ -6,4 +15,25 @@ mat-spinner {
   margin-left: auto;
   margin-right: auto;
   margin-top: 30%;
+}
+
+mat-paginator {
+  margin-top: 1rem;
+}
+
+.info-text {
+  text-align: center;
+}
+
+.post-image {
+  width: 100%;
+}
+
+.post-image img {
+  width: 100%;
+  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
+}
+
+.example-card {
+  max-width: 800px;
 }

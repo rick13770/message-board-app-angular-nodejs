@@ -5,7 +5,13 @@
     <mat-expansion-panel-header>
       <mat-panel-title>{{ post.title }}</mat-panel-title>
     </mat-expansion-panel-header>
+
+    <div class="post-image">
+      <img [src]="post.imageUrl" alt="post.title" />
+    </div>
+
     <p>{{ post.content }}</p>
+
     <mat-action-row>
       <a
         [routerLink]="['edit-post', post.id]"
