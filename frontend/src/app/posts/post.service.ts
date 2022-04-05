@@ -8,12 +8,14 @@ const POSTS_URL = 'http://localhost:3000/api/posts';
 
 interface PostData {
   title: string;
+  imageUrl: string;
   content: string;
 }
 
 interface PostWithId {
   _id: string;
   title: string;
+  imageUrl: string;
   content: string;
 }
 
@@ -89,6 +91,7 @@ export class PostService {
     return {
       id: post._id,
       title: post.title,
+      imageUrl: post.imageUrl,
       content: post.content,
     };
   }

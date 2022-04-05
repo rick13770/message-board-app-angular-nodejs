@@ -59,6 +59,7 @@ export class PostFormComponent implements OnInit {
     if (this.mode === 'add') {
       const post = {
         title: postForm.value.title,
+        imageUrl: postForm.value.imageUrl,
         content: postForm.value.content,
       };
 

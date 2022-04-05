@@ -18,6 +18,23 @@
       />
       <mat-error *ngIf="title.invalid">Title is required</mat-error>
     </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Image URL</mat-label>
+      <input
+        #imageUrl="ngModel"
+        [ngModel]="post?.imageUrl"
+        matInput
+        name="imageUrl"
+        id="imageUrl"
+        type="url"
+        autocomplete="off"
+        required
+        [disabled]="loading"
+      />
+      <mat-error *ngIf="imageUrl.invalid">Image URL is required</mat-error>
+    </mat-form-field>
+
     <mat-form-field appearance="fill">
       <mat-label>Content</mat-label>
       <textarea
@@ -35,6 +52,7 @@
       ></textarea>
       <mat-error *ngIf="content.invalid">Content is required</mat-error>
     </mat-form-field>
+
     <button mat-raised-button color="accent" type="submit" [disabled]="loading">
       Save Post
     </button>

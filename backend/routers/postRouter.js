@@ -28,6 +28,7 @@ router.get('/:id', async (req, res) => {
 router.post('', async (req, res) => {
   const post = new Post({
     title: req.body.title,
+    imageUrl: req.body.imageUrl,
     content: req.body.content,
   });
 
@@ -53,12 +54,8 @@ router.patch('/:id', async (req, res) => {
     return res.status(404).json({ message: 'Post not found' });
   }
 
-  if (req.body.title) {
-    post.title = req.body.title;
-  }
-
-  if (req.body.content) {
-    post.content = req.body.content;
+  if (!req.body.title || !req.body.imageUrl || !req.body.content) {
+    return res.status(400).json({ message: 'Please provide all fields' });
   }
 
   try {
