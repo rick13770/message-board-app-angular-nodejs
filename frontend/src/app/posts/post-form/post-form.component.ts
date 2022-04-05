@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { Post } from '../post.model';
+import { Post } from '../post';
 import { PostService } from '../post.service';
 
 @Component({
@@ -15,10 +15,10 @@ export class PostFormComponent implements OnInit {
   mode: 'add' | 'edit' = 'add';
 
   post?: Post;
-  postId: string = '';
+  id: string = '';
 
   loading = false;
-  postSubscription = new Subscription();
+  postSub?: Subscription;
 
   constructor(
     private postService: PostService,
@@ -29,17 +29,15 @@ export class PostFormComponent implements OnInit {
   ngOnInit(): void {
     this.activatedRoute.params.subscribe((params) => {
       if (params.postId) {
-        this.postId = params.postId;
+        this.id = params.postId;
         this.mode = 'edit';
         this.pageTitle = 'Edit Post';
 
         this.loading = true;
-        this.postSubscription = this.postService
-          .fetchPost(this.postId)
-          .subscribe((post) => {
-            this.post = post;
-            this.loading = false;
-          });
+        this.postSub = this.postService.get(this.id).subscribe((post) => {
+          this.post = post;
+          this.loading = false;
+        });
       } else {
         this.mode = 'add';
       }
@@ -47,7 +45,7 @@ export class PostFormComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
-    this.postSubscription.unsubscribe();
+    this.postSub?.unsubscribe();
   }
 
   onSubmit(postForm: NgForm) {
@@ -64,9 +62,9 @@ export class PostFormComponent implements OnInit {
         content: postForm.value.content,
       };
 
-      action = this.postService.createPost(post);
+      action = this.postService.create(post);
     } else {
-      action = this.postService.updatePost(this.postId, postForm.value);
+      action = this.postService.update(this.id, postForm.value);
     }
 
     action?.subscribe((_response) => {

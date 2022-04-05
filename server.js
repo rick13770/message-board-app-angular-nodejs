@@ -1,6 +1,6 @@
-const app = require('./message-board-backend/app');
+const app = require('./backend/app');
 
-const debug = require('debug')('message-board-app-angular-nodejs');
+const debug = require('debug')('app-angular-nodejs');
 const http = require('http');
 
 const normalizePort = (val) => {
@@ -39,17 +39,20 @@ const onError = (error) => {
 };
 
 const onListening = () => {
-  const addr = server.address();
   const bind = typeof port === 'string' ? 'pipe ' + port : 'port ' + port;
   debug('Listening on ' + bind);
 };
 
 const port = normalizePort(process.env.PORT || '3000');
+
 app.set('port', port);
 
 const server = http.createServer(app);
+
 server.on('error', onError);
+
 server.on('listening', onListening);
+
 server.listen(port, () => {
   console.log('Listening on port ' + port);
 });

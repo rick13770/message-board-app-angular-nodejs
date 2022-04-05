@@ -2,29 +2,29 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
-import { Post } from './post.model';
+import { Post } from './post';
 
 const POSTS_URL = 'http://localhost:3000/api/posts';
 
-interface NewPost {
+interface PostData {
   title: string;
   content: string;
 }
 
-interface PostDTO extends NewPost {
+interface PostWithId {
   _id: string;
+  title: string;
+  content: string;
 }
 
-interface MessageResponse {
+interface AllPostsResponse {
+  posts: PostWithId[];
   message: string;
 }
 
-interface AllPostsResponse extends MessageResponse {
-  posts: PostDTO[];
-}
-
-interface SinglePostResponse extends MessageResponse {
-  post: PostDTO;
+interface SinglePostResponse {
+  post: PostWithId;
+  message: string;
 }
 
 @Injectable({
@@ -38,11 +38,11 @@ export class PostService {
 
   constructor(private http: HttpClient) {}
 
-  fetchAllPosts(): Observable<Post[]> {
+  list(): Observable<Post[]> {
     return this.http.get<AllPostsResponse>(POSTS_URL).pipe(
       map((response) => {
         return response.posts.map((post) => {
-          return this.transformPost(post);
+          return this.transform(post);
         });
       }),
       tap((posts) => {
@@ -52,33 +52,31 @@ export class PostService {
     );
   }
 
-  fetchPost(postId: string): Observable<Post> {
-    return this.http.get<SinglePostResponse>(`${POSTS_URL}/${postId}`).pipe(
+  get(id: string): Observable<Post> {
+    return this.http.get<SinglePostResponse>(`${POSTS_URL}/${id}`).pipe(
       map((response) => {
-        return this.transformPost(response.post);
+        return this.transform(response.post);
       })
     );
   }
 
-  createPost(post: NewPost): Observable<Post> {
+  create(post: PostData): Observable<Post> {
     return this.http.post<SinglePostResponse>(POSTS_URL, post).pipe(
       map((response) => {
-        return this.transformPost(response.post);
+        return this.transform(response.post);
       })
     );
   }
 
-  updatePost(postId: string, post: PostDTO): Observable<Post> {
-    return this.http
-      .patch<SinglePostResponse>(`${POSTS_URL}/${postId}`, post)
-      .pipe(
-        map((response) => {
-          return this.transformPost(response.post);
-        })
-      );
+  update(id: string, post: PostWithId): Observable<Post> {
+    return this.http.patch<SinglePostResponse>(`${POSTS_URL}/${id}`, post).pipe(
+      map((response) => {
+        return this.transform(response.post);
+      })
+    );
   }
 
-  deletePost(postId: string): Observable<{ message: string }> {
+  delete(postId: string): Observable<{ message: string }> {
     return this.http.delete<{ message: string }>(`${POSTS_URL}/${postId}`).pipe(
       tap((_response) => {
         this.posts = this.posts.filter((post) => post.id !== postId);
@@ -87,7 +85,7 @@ export class PostService {
     );
   }
 
-  private transformPost(post: PostDTO): Post {
+  private transform(post: PostWithId): Post {
     return {
       id: post._id,
       title: post.title,
