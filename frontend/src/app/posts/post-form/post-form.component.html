@@ -1,15 +1,11 @@
 <mat-card>
   <h2 class="mat-title">{{ pageTitle }}</h2>
 
-  <form *ngIf="postForm" [formGroup]="postForm" (submit)="onSubmit()">
-    <mat-form-field appearance="fill">
-      <mat-label>Title</mat-label>
-      <input formControlName="title" matInput id="title" autocomplete="off" />
-      <mat-error *ngIf="postForm.get('title')?.invalid"
-        >Title is required</mat-error
-      >
-    </mat-form-field>
-
+  <form
+    *ngIf="!loading && postForm"
+    [formGroup]="postForm"
+    (submit)="onSubmit()"
+  >
     <mat-form-field appearance="fill">
       <mat-label>Image URL</mat-label>
       <input
@@ -21,6 +17,18 @@
       />
       <mat-error *ngIf="postForm.get('imageUrl')?.invalid"
         >Image URL is required</mat-error
+      >
+    </mat-form-field>
+
+    <div *ngIf="postForm.value.imageUrl" class="image-preview">
+      <img [src]="postForm.value.imageUrl" [alt]="postForm.value.title" />
+    </div>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Title</mat-label>
+      <input formControlName="title" matInput id="title" autocomplete="off" />
+      <mat-error *ngIf="postForm.get('title')?.invalid"
+        >Title is required</mat-error
       >
     </mat-form-field>
 
@@ -40,6 +48,16 @@
 
     <button mat-raised-button color="accent" type="submit" [disabled]="loading">
       Save Post
+    </button>
+
+    <button
+      mat-raised-button
+      routerLink="/"
+      routerLinkActive="active"
+      style="margin-left: 1rem"
+      type="button"
+    >
+      Cancel
     </button>
   </form>
 </mat-card>

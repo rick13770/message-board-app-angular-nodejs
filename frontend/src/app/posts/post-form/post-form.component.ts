@@ -55,12 +55,12 @@ export class PostFormComponent implements OnInit {
         this.postSub = this.postService.get(this.id).subscribe((post) => {
           this.post = post;
           this.loading = false;
-        });
 
-        this.postForm?.setValue({
-          title: this.post?.title,
-          imageUrl: this.post?.imageUrl,
-          content: this.post?.content,
+          this.postForm?.setValue({
+            title: this.post?.title,
+            imageUrl: this.post?.imageUrl,
+            content: this.post?.content,
+          });
         });
       } else {
         this.mode = 'add';
