@@ -92,10 +92,9 @@ export class PostFormComponent implements OnInit {
       action = this.postService.update(this.id, this.postForm?.value);
     }
 
-    this.postForm?.reset();
-
     action?.subscribe((_response) => {
       this.loading = false;
+      this.postForm?.reset();
       this.router.navigateByUrl('/');
     });
   }

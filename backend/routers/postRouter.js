@@ -47,7 +47,7 @@ router.post('', async (req, res) => {
   }
 });
 
-router.patch('/:id', async (req, res) => {
+router.put('/:id', async (req, res) => {
   const post = await Post.findById(req.params.id);
 
   if (!post) {
@@ -57,6 +57,10 @@ router.patch('/:id', async (req, res) => {
   if (!req.body.title || !req.body.imageUrl || !req.body.content) {
     return res.status(400).json({ message: 'Please provide all fields' });
   }
+
+  post.title = req.body.title;
+  post.imageUrl = req.body.imageUrl;
+  post.content = req.body.content;
 
   try {
     await post.save();

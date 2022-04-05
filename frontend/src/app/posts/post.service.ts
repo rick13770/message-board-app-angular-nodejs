@@ -71,7 +71,7 @@ export class PostService {
   }
 
   update(id: string, post: PostWithId): Observable<Post> {
-    return this.http.patch<SinglePostResponse>(`${POSTS_URL}/${id}`, post).pipe(
+    return this.http.put<SinglePostResponse>(`${POSTS_URL}/${id}`, post).pipe(
       map((response) => {
         return this.transform(response.post);
       })
