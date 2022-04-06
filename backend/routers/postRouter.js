@@ -3,7 +3,7 @@ const Post = require('../models/post');
 
 const router = express.Router();
 
-router.get('', async (req, res) => {
+router.get('/', async (req, res) => {
   const pageSize = Number(req.query.pageSize);
   const currentPage = Number(req.query.currentPage);
 
@@ -37,7 +37,7 @@ router.get('/:id', async (req, res) => {
   });
 });
 
-router.post('', async (req, res) => {
+router.post('/', async (req, res) => {
   const post = new Post({
     title: req.body.title,
     imageUrl: req.body.imageUrl,

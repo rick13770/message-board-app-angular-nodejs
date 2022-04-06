@@ -1,9 +1,13 @@
 const bcrypt = require('bcryptjs');
 const express = require('express');
+const jwt = require('jsonwebtoken');
 
 const User = require('../models/user');
 
 const router = express.Router();
+
+const JWT_SECRET = process.env.JWT_SECRET || 'secret';
+const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '30d';
 
 router.post('/register', async (req, res) => {
   const { email, password } = req.body;
@@ -17,7 +21,8 @@ router.post('/register', async (req, res) => {
     await user.save();
     res.json({
       message: 'User created successfully',
-      user: user,
+      email: user.email,
+      token: generateToken(user),
     });
   } catch (error) {
     res.status(400).json({
@@ -38,6 +43,7 @@ router.post('/login', async (req, res) => {
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
+
     if (!isMatch) {
       return res.status(400).json({
         message: 'Invalid email or password',
@@ -47,7 +53,8 @@ router.post('/login', async (req, res) => {
     // const token = await user.generateAuthToken();
     res.json({
       message: 'User logged in successfully',
-      // token: token,
+      email: user.email,
+      token: generateToken(user),
     });
   } catch (error) {
     res.status(400).json({
@@ -55,5 +62,11 @@ router.post('/login', async (req, res) => {
     });
   }
 });
+
+const generateToken = (user) => {
+  return jwt.sign({ id: user._id, email: user.email }, JWT_SECRET, {
+    expiresIn: JWT_EXPIRES_IN,
+  });
+};
 
 module.exports = router;

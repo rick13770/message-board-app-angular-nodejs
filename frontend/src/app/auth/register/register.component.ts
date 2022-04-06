@@ -32,8 +32,16 @@ export class RegisterComponent implements OnDestroy, OnInit {
         email: registerForm.value.email,
         password: registerForm.value.password,
       })
-      .subscribe((response) => {
-        this.isLoading = false;
-      });
+      .subscribe(
+        (response) => {
+          this.isLoading = false;
+          console.log(response);
+          // localStorage.setItem('message-board-token', response.token);
+        },
+        (error) => {
+          this.isLoading = false;
+          console.log(error);
+        }
+      );
   }
 }
