@@ -1,5 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { ReplaySubject } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { User } from './user';
 
@@ -9,20 +11,36 @@ const USERS_URL = environment.apiUrl + '/users';
   providedIn: 'root',
 })
 export class AuthService {
+  private authStatus = new ReplaySubject<boolean>(1);
+
+  readonly authStatus$ = this.authStatus.asObservable();
+
   constructor(private http: HttpClient) {}
 
   register(user: any) {
-    return this.http.post<User>(USERS_URL + '/register', {
-      email: user.email,
-      password: user.password,
-    });
+    return this.http
+      .post<User>(USERS_URL + '/register', {
+        email: user.email,
+        password: user.password,
+      })
+      .pipe(
+        tap(() => {
+          this.authStatus.next(true);
+        })
+      );
   }
 
   login(user: any) {
-    return this.http.post<User>(USERS_URL + '/login', {
-      email: user.email,
-      password: user.password,
-    });
+    return this.http
+      .post<User>(USERS_URL + '/login', {
+        email: user.email,
+        password: user.password,
+      })
+      .pipe(
+        tap(() => {
+          this.authStatus.next(true);
+        })
+      );
   }
 
   getToken() {

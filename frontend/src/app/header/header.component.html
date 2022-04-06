@@ -10,13 +10,22 @@
         mat-button
         >Home</a
       >
+    </li>
+    <li *ngIf="isLoggedIn">
       <a routerLink="/create-post" routerLinkActive="mat-accent" mat-button
         >Add New Post</a
       >
+    </li>
+    <li *ngIf="!isLoggedIn">
       <a routerLink="/login" routerLinkActive="mat-accent" mat-button>Login</a>
+    </li>
+    <li *ngIf="!isLoggedIn">
       <a routerLink="/register" routerLinkActive="mat-accent" mat-button
         >Register</a
       >
+    </li>
+    <li *ngIf="isLoggedIn">
+      <button mat-button>Logout</button>
     </li>
   </ul>
 </mat-toolbar>
