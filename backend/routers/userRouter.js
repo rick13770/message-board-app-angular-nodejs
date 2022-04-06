@@ -19,8 +19,9 @@ router.post('/register', async (req, res) => {
 
   try {
     await user.save();
-    res.json({
+    res.status(201).json({
       message: 'User created successfully',
+      id: user._id,
       email: user.email,
       token: generateToken(user),
     });
@@ -53,6 +54,7 @@ router.post('/login', async (req, res) => {
     // const token = await user.generateAuthToken();
     res.json({
       message: 'User logged in successfully',
+      id: user._id,
       email: user.email,
       token: generateToken(user),
     });

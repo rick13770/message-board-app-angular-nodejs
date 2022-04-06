@@ -36,10 +36,19 @@ export class LoginComponent implements OnDestroy, OnInit {
         (response) => {
           this.isLoading = false;
           console.log(response);
+          localStorage.setItem(
+            'message-board-user',
+            JSON.stringify({
+              id: response.id,
+              email: response.email,
+              token: response.token,
+            })
+          );
         },
-        (error) => {
+        (errorResponse) => {
           this.isLoading = false;
-          console.log(error);
+          console.log(errorResponse);
+          alert(errorResponse.error.message);
         }
       );
   }

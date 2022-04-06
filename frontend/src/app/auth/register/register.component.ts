@@ -35,12 +35,19 @@ export class RegisterComponent implements OnDestroy, OnInit {
       .subscribe(
         (response) => {
           this.isLoading = false;
-          console.log(response);
-          // localStorage.setItem('message-board-token', response.token);
+          localStorage.setItem(
+            'message-board-user',
+            JSON.stringify({
+              id: response.id,
+              email: response.email,
+              token: response.token,
+            })
+          );
         },
-        (error) => {
+        (errorResponse) => {
           this.isLoading = false;
-          console.log(error);
+          console.log(errorResponse);
+          alert(errorResponse.error.message);
         }
       );
   }

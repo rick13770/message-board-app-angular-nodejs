@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
-import { AuthData } from './auth-data';
+import { User } from './user';
 
 const USERS_URL = environment.apiUrl + '/users';
 
@@ -12,14 +12,14 @@ export class AuthService {
   constructor(private http: HttpClient) {}
 
   register(user: any) {
-    return this.http.post<AuthData>(USERS_URL + '/register', {
+    return this.http.post<User>(USERS_URL + '/register', {
       email: user.email,
       password: user.password,
     });
   }
 
   login(user: any) {
-    return this.http.post<AuthData>(USERS_URL + '/login', {
+    return this.http.post<User>(USERS_URL + '/login', {
       email: user.email,
       password: user.password,
     });
