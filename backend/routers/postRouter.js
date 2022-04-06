@@ -8,7 +8,7 @@ router.get('/', async (req, res) => {
   const pageSize = Number(req.query.pageSize);
   const currentPage = Number(req.query.currentPage);
 
-  const postQuery = Post.find().sort('-createdAt');
+  const postQuery = Post.find().sort('-createdAt').populate('creator');
 
   if (pageSize && currentPage) {
     postQuery.skip(pageSize * (currentPage - 1)).limit(pageSize);

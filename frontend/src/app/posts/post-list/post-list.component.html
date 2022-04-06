@@ -1,19 +1,25 @@
 <mat-spinner *ngIf="isLoading" diameter="75"></mat-spinner>
 
-<mat-accordion *ngIf="!isLoading && posts.length > 0" multi="false">
-  <mat-expansion-panel *ngFor="let post of posts">
-    <mat-expansion-panel-header>
-      <mat-panel-title>{{ post.title }}</mat-panel-title>
-    </mat-expansion-panel-header>
+<ng-container *ngIf="!isLoading && posts.length > 0">
+  <mat-card *ngFor="let post of posts" class="example-card">
+    <mat-card-header>
+      <mat-card-title>{{ post.title }}</mat-card-title>
+      <mat-card-subtitle
+        >{{ post.createdAtForHumans }} by
+        {{ post.creatorEmail }}</mat-card-subtitle
+      >
+    </mat-card-header>
 
-    <div class="post-image">
-      <img [src]="post.imageUrl" alt="post.title" />
-    </div>
+    <img mat-card-image [src]="post.imageUrl" [alt]="post.title" />
 
-    <div style="white-space: pre-line">{{ post.content }}</div>
+    <mat-card-content>
+      <div style="font-size: 1rem; white-space: pre-line">
+        {{ post.content }}
+      </div>
+    </mat-card-content>
 
     <ng-container *ngIf="user">
-      <mat-action-row *ngIf="user?.id === post.creator.toString()">
+      <mat-card-actions *ngIf="user?.email === post.creator.email.toString()">
         <a
           [routerLink]="['edit-post', post.id]"
           mat-button
@@ -29,10 +35,10 @@
         >
           DELETE
         </button>
-      </mat-action-row>
+      </mat-card-actions>
     </ng-container>
-  </mat-expansion-panel>
-</mat-accordion>
+  </mat-card>
+</ng-container>
 
 <mat-paginator
   *ngIf="posts.length > 0"

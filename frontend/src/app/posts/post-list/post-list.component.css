@@ -16,11 +16,9 @@ mat-spinner {
 }
 
 mat-paginator {
+  margin: auto;
   margin-top: 1rem;
-}
-
-.info-text {
-  text-align: center;
+  max-width: 640px;
 }
 
 .post-image {
@@ -34,5 +32,7 @@ mat-paginator {
 }
 
 .example-card {
-  max-width: 800px;
+  max-width: 640px;
+  margin: auto;
+  margin-bottom: 1rem;
 }

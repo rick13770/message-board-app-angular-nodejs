@@ -3,5 +3,8 @@ export interface Post {
   title: string;
   imageUrl: string;
   content: string;
-  creator: string;
+  creator: any;
+  creatorEmail: string;
+  createdAt: Date;
+  createdAtForHumans: string;
 }

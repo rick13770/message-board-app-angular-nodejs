@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { formatDistance } from 'date-fns';
 import { Observable, Subject } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
@@ -18,7 +19,9 @@ interface PostWithId {
   title: string;
   imageUrl: string;
   content: string;
-  creator: string;
+  creator: any;
+  creatorEmail: string;
+  createdAt: Date;
 }
 
 interface AllPostsResponse {
@@ -126,6 +129,11 @@ export class PostService {
       imageUrl: post.imageUrl,
       content: post.content,
       creator: post.creator,
+      creatorEmail: post.creator.email,
+      createdAt: post.createdAt,
+      createdAtForHumans: formatDistance(new Date(post.createdAt), new Date(), {
+        addSuffix: true,
+      }),
     };
   }
 }
