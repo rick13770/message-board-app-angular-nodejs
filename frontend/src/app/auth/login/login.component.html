@@ -1,0 +1,27 @@
+<mat-card>
+  <h2 class="mat-title">Login</h2>
+
+  <mat-spinner *ngIf="isLoading" diameter="75"></mat-spinner>
+
+  <form #loginForm>
+    <mat-form-field appearance="fill">
+      <mat-label>Email</mat-label>
+      <input matInput id="email" type="email" autocomplete="off" />
+      <mat-error *ngIf="loginForm.invalid">Email is required</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Password</mat-label>
+      <input
+        matInput
+        id="password"
+        name="password"
+        type="password"
+        autocomplete="off"
+      />
+      <mat-error *ngIf="loginForm.invalid">Password is required</mat-error>
+    </mat-form-field>
+
+    <button mat-raised-button color="accent" type="submit">Login</button>
+  </form>
+</mat-card>

@@ -1,6 +1,8 @@
 <mat-card>
   <h2 class="mat-title">{{ pageTitle }}</h2>
 
+  <mat-spinner *ngIf="loading" diameter="75"></mat-spinner>
+
   <form
     *ngIf="!loading && postForm"
     [formGroup]="postForm"

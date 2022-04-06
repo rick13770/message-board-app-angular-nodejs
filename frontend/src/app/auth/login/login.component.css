@@ -15,12 +15,3 @@ mat-form-field {
 mat-spinner {
   margin: auto;
 }
-
-.image-preview {
-  height: 15rem;
-  margin: 1rem 0;
-}
-
-.image-preview img {
-  height: 100%;
-}

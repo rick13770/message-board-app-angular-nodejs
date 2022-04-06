@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { LoginComponent } from './auth/login/login.component';
 import { PostFormComponent } from './posts/post-form/post-form.component';
 import { PostListComponent } from './posts/post-list/post-list.component';
 
@@ -17,6 +18,11 @@ const routes: Routes = [
   {
     path: 'edit-post/:postId',
     component: PostFormComponent,
+    pathMatch: 'full',
+  },
+  {
+    path: 'login',
+    component: LoginComponent,
     pathMatch: 'full',
   },
 ];
