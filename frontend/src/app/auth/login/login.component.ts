@@ -41,7 +41,6 @@ export class LoginComponent implements OnDestroy, OnInit {
       .subscribe(
         (response) => {
           this.isLoading = false;
-          console.log(response);
           localStorage.setItem(
             'message-board-user',
             JSON.stringify({
@@ -54,7 +53,6 @@ export class LoginComponent implements OnDestroy, OnInit {
         },
         (errorResponse) => {
           this.isLoading = false;
-          console.log(errorResponse);
           this.snackBar.open(errorResponse.error.message, 'OK', {
             duration: 3000,
           });

@@ -7,14 +7,9 @@ import { AuthService } from './auth/auth.service';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent implements OnInit {
-  isAuthReady = false;
-
-  constructor(private authService: AuthService) {}
+  constructor(public authService: AuthService) {}
 
   ngOnInit(): void {
     this.authService.autoLogin();
-    this.authService.isReady$.subscribe((status) => {
-      this.isAuthReady = status;
-    });
   }
 }

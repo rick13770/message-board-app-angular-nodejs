@@ -100,7 +100,6 @@ export class PostFormComponent implements OnInit {
       },
       (error) => {
         this.loading = false;
-        console.log(error.message);
         alert(error.message);
       }
     );

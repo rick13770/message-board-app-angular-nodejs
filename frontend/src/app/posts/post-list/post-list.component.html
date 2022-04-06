@@ -12,7 +12,7 @@
 
     <div style="white-space: pre-line">{{ post.content }}</div>
 
-    <ng-container *ngIf="authService.currentUser$ | async; let user">
+    <ng-container *ngIf="user">
       <mat-action-row *ngIf="user?.id === post.creator.toString()">
         <a
           [routerLink]="['edit-post', post.id]"

@@ -1,4 +1,4 @@
-<ng-container *ngIf="isAuthReady; else splash">
+<ng-container *ngIf="authService.isReady$ | async; else splash">
   <app-header></app-header>
 
   <main>

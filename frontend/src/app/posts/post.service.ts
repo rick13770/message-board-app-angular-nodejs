@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { Post } from './post';
@@ -52,7 +52,7 @@ export class PostService {
   };
 
   private responseDataSubject = new Subject<PostsResponseData>();
-  private pageSizeSubject = new BehaviorSubject<number>(5);
+  private pageSizeSubject = new Subject<number>();
 
   readonly allPosts$ = this.responseDataSubject.asObservable();
   readonly pageSize$ = this.pageSizeSubject.asObservable();

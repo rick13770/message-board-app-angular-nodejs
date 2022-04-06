@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ReplaySubject } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { shareReplay, tap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { User } from './user';
 
@@ -15,7 +15,13 @@ export class AuthService {
   private currentUser = new ReplaySubject<User | null>(1);
 
   readonly isReady$ = this.isReady.asObservable();
-  readonly currentUser$ = this.currentUser.asObservable();
+
+  readonly currentUser$ = this.currentUser.asObservable().pipe(
+    shareReplay({
+      bufferSize: 1,
+      refCount: true,
+    })
+  );
 
   constructor(private http: HttpClient) {}
 
@@ -26,9 +32,9 @@ export class AuthService {
         password: user.password,
       })
       .pipe(
-        tap(() => {
+        tap((storedUser) => {
           this.isReady.next(true);
-          this.currentUser.next(user);
+          this.currentUser.next(storedUser);
         })
       );
   }
@@ -40,9 +46,9 @@ export class AuthService {
         password: user.password,
       })
       .pipe(
-        tap(() => {
+        tap((storedUser) => {
           this.isReady.next(true);
-          this.currentUser.next(user);
+          this.currentUser.next(storedUser);
         })
       );
   }

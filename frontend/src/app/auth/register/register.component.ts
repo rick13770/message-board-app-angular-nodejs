@@ -62,7 +62,6 @@ export class RegisterComponent implements OnDestroy, OnInit {
         },
         (errorResponse) => {
           this.isLoading = false;
-          console.log(errorResponse);
           this.snackBar.open(errorResponse.error.message, 'OK', {
             duration: 3000,
           });
