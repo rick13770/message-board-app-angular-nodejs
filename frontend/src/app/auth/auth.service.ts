@@ -11,13 +11,11 @@ const USERS_URL = environment.apiUrl + '/users';
   providedIn: 'root',
 })
 export class AuthService {
-  private isAuthenticated = false;
-  private userId = '';
-  private userEmail = '';
+  private isReady = new ReplaySubject<boolean>(1);
+  private currentUser = new ReplaySubject<User | null>(1);
 
-  private authStatus = new ReplaySubject<boolean>(1);
-
-  readonly authStatus$ = this.authStatus.asObservable();
+  readonly isReady$ = this.isReady.asObservable();
+  readonly currentUser$ = this.currentUser.asObservable();
 
   constructor(private http: HttpClient) {}
 
@@ -29,10 +27,8 @@ export class AuthService {
       })
       .pipe(
         tap(() => {
-          this.isAuthenticated = true;
-          this.userId = user.id;
-          this.userEmail = user.email;
-          this.authStatus.next(true);
+          this.isReady.next(true);
+          this.currentUser.next(user);
         })
       );
   }
@@ -45,30 +41,15 @@ export class AuthService {
       })
       .pipe(
         tap(() => {
-          this.isAuthenticated = true;
-          this.userId = user.id;
-          this.userEmail = user.email;
-          this.authStatus.next(true);
+          this.isReady.next(true);
+          this.currentUser.next(user);
         })
       );
   }
 
   logout() {
-    this.isAuthenticated = false;
-    this.authStatus.next(false);
+    this.currentUser.next(null);
     localStorage.removeItem('message-board-user');
-  }
-
-  getAuthenticated() {
-    return this.isAuthenticated;
-  }
-
-  getUserId() {
-    return this.userId;
-  }
-
-  getUserEmail() {
-    return this.userEmail;
   }
 
   getToken() {
@@ -83,11 +64,8 @@ export class AuthService {
     if (data) {
       const user = JSON.parse(data);
 
-      this.isAuthenticated = true;
-      this.userId = user.id;
-      this.userEmail = user.email;
-      this.authStatus.next(true);
+      this.currentUser.next(user);
     }
-    return true;
+    this.isReady.next(true);
   }
 }

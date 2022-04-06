@@ -11,21 +11,23 @@
         >Home</a
       >
     </li>
-    <li *ngIf="isLoggedIn">
+    <li *ngIf="authService.currentUser$ | async">
       <a routerLink="/create-post" routerLinkActive="mat-accent" mat-button
         >Add New Post</a
       >
     </li>
-    <li *ngIf="!isLoggedIn">
+    <li *ngIf="!(authService.currentUser$ | async)">
       <a routerLink="/login" routerLinkActive="mat-accent" mat-button>Login</a>
     </li>
-    <li *ngIf="!isLoggedIn">
+    <li *ngIf="!(authService.currentUser$ | async)">
       <a routerLink="/register" routerLinkActive="mat-accent" mat-button
         >Register</a
       >
     </li>
-    <li *ngIf="isLoggedIn">
-      <button mat-button (click)="onLogout()">Logout ({{ userEmail }})</button>
+    <li *ngIf="authService.currentUser$ | async">
+      <button mat-button (click)="onLogout()">
+        Logout ({{ (authService.currentUser$ | async)?.email }})
+      </button>
     </li>
   </ul>
 </mat-toolbar>

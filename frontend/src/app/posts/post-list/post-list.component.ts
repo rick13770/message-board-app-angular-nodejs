@@ -17,29 +17,27 @@ export class PostListComponent implements OnInit, OnDestroy {
   pageSize = 2;
   currentPage = 1;
 
-  loading = false;
+  isLoading = false;
 
   authSub?: Subscription;
   postsSub?: Subscription;
   pageSizeSub?: Subscription;
 
-  isLoggedIn = false;
-  userId = '';
-
   constructor(
-    private authService: AuthService,
+    public authService: AuthService,
     private postService: PostService
   ) {}
 
   ngOnInit(): void {
-    this.authSub = this.authService.authStatus$.subscribe((status) => {
-      this.isLoggedIn = status;
-      this.userId = this.authService.getUserId();
-    });
-
-    this.pageSizeSub = this.postService.pageSize$.subscribe((pageSize) => {
-      this.pageSize = pageSize;
-      this.fetchAll();
+    this.authSub = this.authService.isReady$.subscribe((status) => {
+      if (status) {
+        this.pageSizeSub = this.postService.pageSize$.subscribe((pageSize) => {
+          this.pageSize = pageSize;
+          this.fetchAll();
+        });
+      } else {
+        this.authService.autoLogin();
+      }
     });
   }
 
@@ -62,14 +60,14 @@ export class PostListComponent implements OnInit, OnDestroy {
   }
 
   private fetchAll() {
-    this.loading = true;
+    this.isLoading = true;
 
     this.postsSub = this.postService
       .list(this.pageSize, this.currentPage)
       .subscribe((responseData) => {
         this.totalPosts = responseData.totalPosts;
         this.posts = responseData.posts;
-        this.loading = false;
+        this.isLoading = false;
       });
   }
 }

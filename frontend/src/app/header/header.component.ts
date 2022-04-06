@@ -14,14 +14,9 @@ export class HeaderComponent implements OnDestroy, OnInit {
   isLoggedIn = false;
   userEmail = '';
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(public authService: AuthService, private router: Router) {}
 
-  ngOnInit(): void {
-    this.authSub = this.authService.authStatus$.subscribe((status) => {
-      this.isLoggedIn = status;
-      this.userEmail = this.authService.getUserEmail();
-    });
-  }
+  ngOnInit(): void {}
 
   ngOnDestroy(): void {
     this.authSub?.unsubscribe();

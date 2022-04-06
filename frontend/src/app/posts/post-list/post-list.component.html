@@ -1,6 +1,6 @@
-<mat-spinner *ngIf="loading" diameter="75"></mat-spinner>
+<mat-spinner *ngIf="isLoading" diameter="75"></mat-spinner>
 
-<mat-accordion *ngIf="!loading && posts.length > 0" multi="false">
+<mat-accordion *ngIf="!isLoading && posts.length > 0" multi="false">
   <mat-expansion-panel *ngFor="let post of posts">
     <mat-expansion-panel-header>
       <mat-panel-title>{{ post.title }}</mat-panel-title>
@@ -12,25 +12,25 @@
 
     <div style="white-space: pre-line">{{ post.content }}</div>
 
-    <mat-action-row
-      *ngIf="isLoggedIn && post.creator.toString() === userId.toString()"
-    >
-      <a
-        [routerLink]="['edit-post', post.id]"
-        mat-button
-        color="primary"
-        [disabled]="loading"
-        >EDIT</a
-      >
-      <button
-        (click)="onDelete(post.id)"
-        mat-button
-        color="warn"
-        [disabled]="loading"
-      >
-        DELETE
-      </button>
-    </mat-action-row>
+    <ng-container *ngIf="authService.currentUser$ | async; let user">
+      <mat-action-row *ngIf="user?.id === post.creator.toString()">
+        <a
+          [routerLink]="['edit-post', post.id]"
+          mat-button
+          color="primary"
+          [disabled]="isLoading"
+          >EDIT</a
+        >
+        <button
+          (click)="onDelete(post.id)"
+          mat-button
+          color="warn"
+          [disabled]="isLoading"
+        >
+          DELETE
+        </button>
+      </mat-action-row>
+    </ng-container>
   </mat-expansion-panel>
 </mat-accordion>
 
@@ -44,6 +44,6 @@
 >
 </mat-paginator>
 
-<p *ngIf="!loading && posts.length === 0" class="info-text mat-body-1">
+<p *ngIf="!isLoading && posts.length === 0" class="info-text mat-body-1">
   No posts yet.
 </p>

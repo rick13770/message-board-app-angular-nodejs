@@ -8,9 +8,13 @@ import { AuthService } from './auth/auth.service';
 })
 export class AppComponent implements OnInit {
   isAuthReady = false;
+
   constructor(private authService: AuthService) {}
 
   ngOnInit(): void {
-    this.isAuthReady = !!this.authService.autoLogin();
+    this.authService.autoLogin();
+    this.authService.isReady$.subscribe((status) => {
+      this.isAuthReady = status;
+    });
   }
 }
