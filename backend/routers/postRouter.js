@@ -29,7 +29,9 @@ router.get('/:id', async (req, res) => {
   const post = await Post.findById(req.params.id);
 
   if (!post) {
-    return res.status(404).json({ message: 'Post not found' });
+    return res.status(404).json({
+      message: 'Post not found',
+    });
   }
 
   res.status(200).json({
@@ -39,10 +41,14 @@ router.get('/:id', async (req, res) => {
 });
 
 router.post('/', checkAuth, async (req, res) => {
+  // @ts-ignore
+  const userId = req.userData.id;
+
   const post = new Post({
     title: req.body.title,
     imageUrl: req.body.imageUrl,
     content: req.body.content,
+    creator: userId,
   });
 
   try {
@@ -61,14 +67,27 @@ router.post('/', checkAuth, async (req, res) => {
 });
 
 router.put('/:id', checkAuth, async (req, res) => {
+  // @ts-ignore
+  const userId = req.userData.id;
+
   const post = await Post.findById(req.params.id);
 
   if (!post) {
-    return res.status(404).json({ message: 'Post not found' });
+    return res.status(404).json({
+      message: 'Post not found',
+    });
+  }
+
+  if (post._id.toString() !== userId.toString()) {
+    return res.status(401).json({
+      message: 'Not authorized',
+    });
   }
 
   if (!req.body.title || !req.body.imageUrl || !req.body.content) {
-    return res.status(400).json({ message: 'Please provide all fields' });
+    return res.status(400).json({
+      message: 'Please provide all fields',
+    });
   }
 
   post.title = req.body.title;
@@ -91,12 +110,21 @@ router.put('/:id', checkAuth, async (req, res) => {
 });
 
 router.delete('/:id', checkAuth, async (req, res) => {
+  // @ts-ignore
+  const userId = req.userData.id;
+
   try {
     const post = await Post.findById(req.params.id);
 
     if (!post) {
       return res.status(404).json({
         message: 'Post not found',
+      });
+    }
+
+    if (post._id.toString() !== userId.toString()) {
+      return res.status(401).json({
+        message: 'Not authorized',
       });
     }
 

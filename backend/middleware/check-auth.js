@@ -8,7 +8,7 @@ const checkAuth = (req, res, next) => {
     const decodedToken = jwt.verify(token, JWT_SECRET);
 
     // @ts-ignore
-    req.userData = { email: decodedToken.email, userId: decodedToken.id };
+    req.userData = { id: decodedToken.id, email: decodedToken.email };
 
     next();
   } catch (error) {
