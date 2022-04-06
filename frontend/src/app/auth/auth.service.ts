@@ -62,4 +62,15 @@ export class AuthService {
       return JSON.parse(data).token;
     }
   }
+
+  autoLogin() {
+    const data = localStorage.getItem('message-board-user');
+    if (data) {
+      const user = JSON.parse(data);
+      this.isAuthenticated = true;
+      this.authStatus.next(true);
+
+      return user;
+    }
+  }
 }
