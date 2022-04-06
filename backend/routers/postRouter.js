@@ -4,11 +4,21 @@ const Post = require('../models/post');
 const router = express.Router();
 
 router.get('', async (req, res) => {
-  const posts = await Post.find().sort({ createdAt: 'desc' }).limit(10);
+  const pageSize = Number(req.query.pageSize);
+  const currentPage = Number(req.query.currentPage);
+
+  const postQuery = Post.find();
+
+  if (pageSize && currentPage) {
+    postQuery.skip(pageSize * (currentPage - 1)).limit(pageSize);
+  }
+
+  const posts = await postQuery;
+  const postCount = await postQuery.countDocuments();
 
   res.status(200).json({
     message: 'Successfully retrieved posts',
-    postCount: posts.length,
+    postCount: postCount,
     posts: posts,
   });
 });
