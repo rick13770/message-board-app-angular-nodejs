@@ -41,8 +41,10 @@ export class PostService {
 
   constructor(private http: HttpClient) {}
 
-  list(): Observable<Post[]> {
-    return this.http.get<AllPostsResponse>(POSTS_URL).pipe(
+  list(pageSize: number, currentPage: number): Observable<Post[]> {
+    const queryParams = `?pageSize=${pageSize}&currentPage=${currentPage}`;
+
+    return this.http.get<AllPostsResponse>(POSTS_URL + queryParams).pipe(
       map((response) => {
         return response.posts.map((post) => {
           return this.transform(post);

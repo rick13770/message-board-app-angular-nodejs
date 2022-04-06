@@ -13,7 +13,8 @@ export class PostListComponent implements OnInit, OnDestroy {
   posts: Post[] = [];
 
   totalPosts = 10;
-  postsPerPage = 5;
+  pageSize = 5;
+  currentpage = 1;
 
   loading = false;
 
@@ -40,16 +41,19 @@ export class PostListComponent implements OnInit, OnDestroy {
   }
 
   onPageChange(page: PageEvent) {
-    console.log(page);
+    this.currentpage = page.pageIndex + 1;
+    this.pageSize = page.pageSize;
     this.fetchAll();
   }
 
   private fetchAll() {
     this.loading = true;
-    this.postsSub = this.postService.list().subscribe((posts) => {
-      this.totalPosts = posts.length;
-      this.posts = posts;
-      this.loading = false;
-    });
+    this.postsSub = this.postService
+      .list(this.pageSize, this.currentpage)
+      .subscribe((posts) => {
+        this.totalPosts = posts.length;
+        this.posts = posts;
+        this.loading = false;
+      });
   }
 }

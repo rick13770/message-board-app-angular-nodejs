@@ -15,10 +15,12 @@ router.get('', async (req, res) => {
 
   const posts = await postQuery;
   const postCount = await postQuery.countDocuments();
+  const totalPosts = await Post.countDocuments();
 
   res.status(200).json({
     message: 'Successfully retrieved posts',
     postCount: postCount,
+    totalPosts: totalPosts,
     posts: posts,
   });
 });
