@@ -25,7 +25,7 @@
       >
     </li>
     <li *ngIf="isLoggedIn">
-      <button mat-button (click)="onLogout()">Logout</button>
+      <button mat-button (click)="onLogout()">Logout ({{ userEmail }})</button>
     </li>
   </ul>
 </mat-toolbar>

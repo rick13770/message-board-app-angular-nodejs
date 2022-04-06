@@ -1,5 +1,9 @@
-<app-header></app-header>
+<ng-container *ngIf="isAuthReady; else splash">
+  <app-header></app-header>
 
-<main>
-  <router-outlet></router-outlet>
-</main>
+  <main>
+    <router-outlet></router-outlet>
+  </main>
+</ng-container>
+
+<ng-template #splash>Loading... </ng-template>

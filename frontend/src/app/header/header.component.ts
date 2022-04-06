@@ -12,12 +12,14 @@ export class HeaderComponent implements OnDestroy, OnInit {
   authSub?: Subscription;
 
   isLoggedIn = false;
+  userEmail = '';
 
   constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit(): void {
     this.authSub = this.authService.authStatus$.subscribe((status) => {
       this.isLoggedIn = status;
+      this.userEmail = this.authService.getUserEmail();
     });
   }
 

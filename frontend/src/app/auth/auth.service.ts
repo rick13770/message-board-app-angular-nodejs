@@ -12,6 +12,8 @@ const USERS_URL = environment.apiUrl + '/users';
 })
 export class AuthService {
   private isAuthenticated = false;
+  private userEmail = '';
+
   private authStatus = new ReplaySubject<boolean>(1);
 
   readonly authStatus$ = this.authStatus.asObservable();
@@ -27,6 +29,7 @@ export class AuthService {
       .pipe(
         tap(() => {
           this.isAuthenticated = true;
+          this.userEmail = user.email;
           this.authStatus.next(true);
         })
       );
@@ -41,6 +44,7 @@ export class AuthService {
       .pipe(
         tap(() => {
           this.isAuthenticated = true;
+          this.userEmail = user.email;
           this.authStatus.next(true);
         })
       );
@@ -56,6 +60,10 @@ export class AuthService {
     return this.isAuthenticated;
   }
 
+  getUserEmail() {
+    return this.userEmail;
+  }
+
   getToken() {
     const data = localStorage.getItem('message-board-user');
     if (data) {
@@ -68,6 +76,7 @@ export class AuthService {
     if (data) {
       const user = JSON.parse(data);
       this.isAuthenticated = true;
+      this.userEmail = user.email;
       this.authStatus.next(true);
 
       return user;
