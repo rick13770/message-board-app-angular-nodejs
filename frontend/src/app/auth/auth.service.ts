@@ -46,6 +46,12 @@ export class AuthService {
       );
   }
 
+  logout() {
+    this.isAuthenticated = false;
+    this.authStatus.next(false);
+    localStorage.removeItem('message-board-user');
+  }
+
   getAuthenticated() {
     return this.isAuthenticated;
   }
