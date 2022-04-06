@@ -24,4 +24,11 @@ export class AuthService {
       password: user.password,
     });
   }
+
+  getToken() {
+    const data = localStorage.getItem('message-board-user');
+    if (data) {
+      return JSON.parse(data).token;
+    }
+  }
 }

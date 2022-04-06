@@ -6,7 +6,7 @@ const PostSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Title is required'],
       minlength: [5, 'Title must be at least 5 characters'],
-      maxlength: [100, 'Title must be less than 100 characters'],
+      maxlength: [200, 'Title must be less than 200 characters'],
     },
     imageUrl: {
       type: String,
