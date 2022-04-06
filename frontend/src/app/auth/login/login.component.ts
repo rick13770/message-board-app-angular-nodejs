@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../auth.service';
@@ -14,7 +15,11 @@ export class LoginComponent implements OnDestroy, OnInit {
 
   loginSub?: Subscription;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private snackBar: MatSnackBar
+  ) {}
 
   ngOnInit(): void {}
 
@@ -50,7 +55,9 @@ export class LoginComponent implements OnDestroy, OnInit {
         (errorResponse) => {
           this.isLoading = false;
           console.log(errorResponse);
-          alert(errorResponse.error.message);
+          this.snackBar.open(errorResponse.error.message, 'OK', {
+            duration: 3000,
+          });
         }
       );
   }

@@ -27,7 +27,7 @@ router.post('/register', async (req, res) => {
     });
   } catch (error) {
     res.status(400).json({
-      message: error.message,
+      message: 'User with this email already exists',
     });
   }
 });

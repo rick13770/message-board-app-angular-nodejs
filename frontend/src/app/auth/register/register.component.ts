@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../auth.service';
@@ -14,7 +15,11 @@ export class RegisterComponent implements OnDestroy, OnInit {
 
   registerSub?: Subscription;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private snackBar: MatSnackBar
+  ) {}
 
   ngOnInit(): void {}
 
@@ -24,6 +29,15 @@ export class RegisterComponent implements OnDestroy, OnInit {
 
   onRegister(registerForm: NgForm) {
     if (registerForm.invalid) {
+      return;
+    }
+
+    if (
+      registerForm.value.password !== registerForm.value.passwordConfirmation
+    ) {
+      this.snackBar.open('Passwords do not match', 'OK', {
+        duration: 3000,
+      });
       return;
     }
 
@@ -49,7 +63,9 @@ export class RegisterComponent implements OnDestroy, OnInit {
         (errorResponse) => {
           this.isLoading = false;
           console.log(errorResponse);
-          alert(errorResponse.error.message);
+          this.snackBar.open(errorResponse.error.message, 'OK', {
+            duration: 3000,
+          });
         }
       );
   }
