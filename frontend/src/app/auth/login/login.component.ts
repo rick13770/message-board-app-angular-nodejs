@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../auth.service';
 
@@ -13,7 +14,7 @@ export class LoginComponent implements OnDestroy, OnInit {
 
   loginSub?: Subscription;
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit(): void {}
 
@@ -44,6 +45,7 @@ export class LoginComponent implements OnDestroy, OnInit {
               token: response.token,
             })
           );
+          this.router.navigateByUrl('/');
         },
         (errorResponse) => {
           this.isLoading = false;
