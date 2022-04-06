@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { Post } from './post';
@@ -21,6 +21,8 @@ interface PostWithId {
 }
 
 interface AllPostsResponse {
+  postCount: number;
+  totalPosts: number;
   posts: PostWithId[];
   message: string;
 }
@@ -30,29 +32,49 @@ interface SinglePostResponse {
   message: string;
 }
 
+interface PostsResponseData {
+  postCount: number;
+  totalPosts: number;
+  posts: Post[];
+  message: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
 export class PostService {
-  private posts: Post[] = [];
-  private postsSubject = new Subject<Post[]>();
+  private responseData: PostsResponseData = {
+    message: '',
+    postCount: 0,
+    totalPosts: 0,
+    posts: [],
+  };
 
-  readonly allPosts$ = this.postsSubject.asObservable();
+  private responseDataSubject = new Subject<PostsResponseData>();
+  private pageSizeSubject = new BehaviorSubject<number>(5);
+
+  readonly allPosts$ = this.responseDataSubject.asObservable();
+  readonly pageSize$ = this.pageSizeSubject.asObservable();
 
   constructor(private http: HttpClient) {}
 
-  list(pageSize: number, currentPage: number): Observable<Post[]> {
+  list(pageSize: number, currentPage: number): Observable<any> {
     const queryParams = `?pageSize=${pageSize}&currentPage=${currentPage}`;
 
     return this.http.get<AllPostsResponse>(POSTS_URL + queryParams).pipe(
       map((response) => {
-        return response.posts.map((post) => {
-          return this.transform(post);
-        });
+        return {
+          message: response.message,
+          postCount: response.postCount,
+          totalPosts: response.totalPosts,
+          posts: response.posts.map((post) => {
+            return this.transform(post);
+          }),
+        };
       }),
-      tap((posts) => {
-        this.posts = posts;
-        this.postsSubject.next(this.posts);
+      tap((responseData) => {
+        this.responseData = responseData;
+        this.responseDataSubject.next(this.responseData);
       })
     );
   }
@@ -84,10 +106,16 @@ export class PostService {
   delete(postId: string): Observable<{ message: string }> {
     return this.http.delete<{ message: string }>(`${POSTS_URL}/${postId}`).pipe(
       tap((_response) => {
-        this.posts = this.posts.filter((post) => post.id !== postId);
-        this.postsSubject.next(this.posts);
+        this.responseData.posts = this.responseData.posts.filter(
+          (post) => post.id !== postId
+        );
+        this.responseDataSubject.next(this.responseData);
       })
     );
+  }
+
+  changePageSize(pageSize: number) {
+    this.pageSizeSubject.next(pageSize);
   }
 
   private transform(post: PostWithId): Post {

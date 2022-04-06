@@ -12,26 +12,27 @@ import { PostService } from '../post.service';
 export class PostListComponent implements OnInit, OnDestroy {
   posts: Post[] = [];
 
-  totalPosts = 10;
-  pageSize = 5;
-  currentpage = 1;
+  totalPosts = 0;
+  pageSize = 2;
+  currentPage = 1;
 
   loading = false;
 
-  postsSub = new Subscription();
+  postsSub?: Subscription;
+  pageSizeSub?: Subscription;
 
-  constructor(private postService: PostService) {
-    // this.postService.allPosts$.subscribe((posts) => {
-    //   this.posts = posts;
-    // });
-  }
+  constructor(private postService: PostService) {}
 
   ngOnInit(): void {
-    this.fetchAll();
+    this.pageSizeSub = this.postService.pageSize$.subscribe((pageSize) => {
+      this.pageSize = pageSize;
+      this.fetchAll();
+    });
   }
 
   ngOnDestroy(): void {
-    this.postsSub.unsubscribe();
+    this.postsSub?.unsubscribe();
+    this.pageSizeSub?.unsubscribe();
   }
 
   onDelete(id: string) {
@@ -41,18 +42,20 @@ export class PostListComponent implements OnInit, OnDestroy {
   }
 
   onPageChange(page: PageEvent) {
-    this.currentpage = page.pageIndex + 1;
+    this.currentPage = page.pageIndex + 1;
     this.pageSize = page.pageSize;
-    this.fetchAll();
+    // this.fetchAll();
+    this.postService.changePageSize(this.pageSize);
   }
 
   private fetchAll() {
     this.loading = true;
+
     this.postsSub = this.postService
-      .list(this.pageSize, this.currentpage)
-      .subscribe((posts) => {
-        this.totalPosts = posts.length;
-        this.posts = posts;
+      .list(this.pageSize, this.currentPage)
+      .subscribe((responseData) => {
+        this.totalPosts = responseData.totalPosts;
+        this.posts = responseData.posts;
         this.loading = false;
       });
   }
