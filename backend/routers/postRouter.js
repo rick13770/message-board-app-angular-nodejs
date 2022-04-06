@@ -8,7 +8,7 @@ router.get('/', async (req, res) => {
   const pageSize = Number(req.query.pageSize);
   const currentPage = Number(req.query.currentPage);
 
-  const postQuery = Post.find();
+  const postQuery = Post.find().sort('-createdAt');
 
   if (pageSize && currentPage) {
     postQuery.skip(pageSize * (currentPage - 1)).limit(pageSize);
@@ -78,7 +78,7 @@ router.put('/:id', checkAuth, async (req, res) => {
     });
   }
 
-  if (post._id.toString() !== userId.toString()) {
+  if (post.creator.toString() !== userId.toString()) {
     return res.status(401).json({
       message: 'Not authorized',
     });
@@ -122,7 +122,7 @@ router.delete('/:id', checkAuth, async (req, res) => {
       });
     }
 
-    if (post._id.toString() !== userId.toString()) {
+    if (post.creator.toString() !== userId.toString()) {
       return res.status(401).json({
         message: 'Not authorized',
       });

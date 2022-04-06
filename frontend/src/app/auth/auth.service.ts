@@ -12,6 +12,7 @@ const USERS_URL = environment.apiUrl + '/users';
 })
 export class AuthService {
   private isAuthenticated = false;
+  private userId = '';
   private userEmail = '';
 
   private authStatus = new ReplaySubject<boolean>(1);
@@ -29,6 +30,7 @@ export class AuthService {
       .pipe(
         tap(() => {
           this.isAuthenticated = true;
+          this.userId = user.id;
           this.userEmail = user.email;
           this.authStatus.next(true);
         })
@@ -44,6 +46,7 @@ export class AuthService {
       .pipe(
         tap(() => {
           this.isAuthenticated = true;
+          this.userId = user.id;
           this.userEmail = user.email;
           this.authStatus.next(true);
         })
@@ -58,6 +61,10 @@ export class AuthService {
 
   getAuthenticated() {
     return this.isAuthenticated;
+  }
+
+  getUserId() {
+    return this.userId;
   }
 
   getUserEmail() {
@@ -75,11 +82,12 @@ export class AuthService {
     const data = localStorage.getItem('message-board-user');
     if (data) {
       const user = JSON.parse(data);
+
       this.isAuthenticated = true;
+      this.userId = user.id;
       this.userEmail = user.email;
       this.authStatus.next(true);
-
-      return user;
     }
+    return true;
   }
 }

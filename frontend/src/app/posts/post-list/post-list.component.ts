@@ -24,6 +24,7 @@ export class PostListComponent implements OnInit, OnDestroy {
   pageSizeSub?: Subscription;
 
   isLoggedIn = false;
+  userId = '';
 
   constructor(
     private authService: AuthService,
@@ -33,6 +34,7 @@ export class PostListComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.authSub = this.authService.authStatus$.subscribe((status) => {
       this.isLoggedIn = status;
+      this.userId = this.authService.getUserId();
     });
 
     this.pageSizeSub = this.postService.pageSize$.subscribe((pageSize) => {
@@ -56,7 +58,6 @@ export class PostListComponent implements OnInit, OnDestroy {
   onPageChange(page: PageEvent) {
     this.currentPage = page.pageIndex + 1;
     this.pageSize = page.pageSize;
-    // this.fetchAll();
     this.postService.changePageSize(this.pageSize);
   }
 

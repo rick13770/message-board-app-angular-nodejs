@@ -12,7 +12,9 @@
 
     <div style="white-space: pre-line">{{ post.content }}</div>
 
-    <mat-action-row *ngIf="isLoggedIn">
+    <mat-action-row
+      *ngIf="isLoggedIn && post.creator.toString() === userId.toString()"
+    >
       <a
         [routerLink]="['edit-post', post.id]"
         mat-button

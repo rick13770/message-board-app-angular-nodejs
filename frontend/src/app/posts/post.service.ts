@@ -18,6 +18,7 @@ interface PostWithId {
   title: string;
   imageUrl: string;
   content: string;
+  creator: string;
 }
 
 interface AllPostsResponse {
@@ -124,6 +125,7 @@ export class PostService {
       title: post.title,
       imageUrl: post.imageUrl,
       content: post.content,
+      creator: post.creator,
     };
   }
 }
