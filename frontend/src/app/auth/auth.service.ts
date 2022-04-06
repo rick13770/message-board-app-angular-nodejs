@@ -11,6 +11,7 @@ const USERS_URL = environment.apiUrl + '/users';
   providedIn: 'root',
 })
 export class AuthService {
+  private isAuthenticated = false;
   private authStatus = new ReplaySubject<boolean>(1);
 
   readonly authStatus$ = this.authStatus.asObservable();
@@ -25,6 +26,7 @@ export class AuthService {
       })
       .pipe(
         tap(() => {
+          this.isAuthenticated = true;
           this.authStatus.next(true);
         })
       );
@@ -38,9 +40,14 @@ export class AuthService {
       })
       .pipe(
         tap(() => {
+          this.isAuthenticated = true;
           this.authStatus.next(true);
         })
       );
+  }
+
+  getAuthenticated() {
+    return this.isAuthenticated;
   }
 
   getToken() {
