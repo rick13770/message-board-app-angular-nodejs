@@ -8,6 +8,7 @@ router.get('', async (req, res) => {
 
   res.status(200).json({
     message: 'Successfully retrieved posts',
+    postCount: posts.length,
     posts: posts,
   });
 });
