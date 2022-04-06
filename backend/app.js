@@ -4,6 +4,7 @@ const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 
 const postRouter = require('./routers/postRouter');
+const userRouter = require('./routers/userRouter');
 
 dotenv.config();
 
@@ -16,8 +17,6 @@ mongoose
   .connect(MONGODB_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    useCreateIndex: true,
-    useFindAndModify: false,
   })
   .then(() => {
     console.log('Connected to MongoDB');
@@ -45,5 +44,6 @@ app.use((req, res, next) => {
 });
 
 app.use('/api/posts', postRouter);
+app.use('/api/users', userRouter);
 
 module.exports = app;
