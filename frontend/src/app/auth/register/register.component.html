@@ -1,5 +1,5 @@
 <mat-card>
-  <h2 class="mat-title">Login</h2>
+  <h2 class="mat-title">Register</h2>
 
   <mat-spinner *ngIf="isLoading" diameter="75"></mat-spinner>
 
@@ -17,7 +17,6 @@
         id="email"
         name="email"
         type="email"
-        autocomplete="off"
         required
         email
       />
@@ -33,7 +32,6 @@
         id="password"
         name="password"
         type="password"
-        autocomplete="off"
         required
         minlength="6"
         maxlength="255"
